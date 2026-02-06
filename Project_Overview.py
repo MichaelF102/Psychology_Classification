@@ -6,13 +6,13 @@ def show_overview():
 
     st.markdown(""" 
     
-    ###1. Michael Fernandes
+    ### 1. Michael Fernandes
                 
-    ###2. Manav Williams 
+    ### 2. Manav Williams 
                 
-    ###3. Nathan Dsouza
+    ### 3. Nathan Dsouza
     
-    ###4. Anshul Shashidhar""")
+    ### 4. Anshul Shashidhar""")
     
     # --- Problem Statement ---
     st.header("1. Problem Statement")
