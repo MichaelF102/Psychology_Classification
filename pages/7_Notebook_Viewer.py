@@ -1,45 +1,53 @@
 import streamlit as st
-import nbformat
-from nbconvert import HTMLExporter
-import streamlit.components.v1 as components
+from streamlit_option_menu import option_menu # pip install streamlit-option-menu
 
-def show_notebook():
-    st.title("📓 Project Notebook Analysis")
-    st.markdown("This view renders the complete Jupyter Notebook with all outputs and formatting preserved.")
+# Import your page functions
+# Ensure these files are in the same folder and have the specific functions defined
+# You might need to rename your previous files slightly to match this import structure
+# or just copy-paste the functions into one big file.
 
-    notebook_path = "Introverts_vs_Extroverts.ipynb"
+# Example structure if you kept them as separate files:
+# from eda_page import show_eda
+# from data_cleaning import show_cleaning
+# from feature_engineering import show_feature_engineering
+# from model_evaluation import show_model_evaluation
+# from live_test import show_live_testing
+# from notebook_viewer import show_notebook
 
-    try:
-        # 1. Read the Notebook file
-        with open(notebook_path, "r", encoding="utf-8") as f:
-            notebook_content = nbformat.read(f, as_version=4)
+st.set_page_config(page_title="Introvert vs Extrovert AI", layout="wide")
 
-        # 2. Initialize the HTML Exporter
-        html_exporter = HTMLExporter()
-        html_exporter.template_name = 'classic' # 'lab', 'classic', or 'basic'
+# Sidebar Navigation
+with st.sidebar:
+    selected = option_menu(
+        "Navigation",
+        ["Home / Notebook", "EDA Analysis", "Data Cleaning", "Feature Eng.", "Model Eval", "Live Prediction"],
+        icons=['book', 'bar-chart', 'brush', 'gear', 'trophy', 'person-bounding-box'],
+        menu_icon="cast",
+        default_index=0,
+    )
 
-        # 3. Convert to HTML
-        (body, resources) = html_exporter.from_notebook_node(notebook_content)
+# Routing Logic
+if selected == "Home / Notebook":
+    # If you haven't split files yet, just paste the notebook_viewer code here
+    import notebook_viewer
+    notebook_viewer.show_notebook()
 
-        # 4. Display in Streamlit
-        # We use a scrollable container to hold the notebook
-        st.download_button(
-            label=" Download Original Notebook",
-            data=open(notebook_path, "rb").read(),
-            file_name="Introverts_vs_Extroverts.ipynb",
-            mime="application/vnd.jupyter"
-        )
-        
-        st.divider()
-        
-        # Render the HTML
-        components.html(body, height=1000, scrolling=True)
+elif selected == "EDA Analysis":
+    import eda_page # Assuming you saved the EDA code as eda_page.py
+    eda_page.show_eda()
 
-    except FileNotFoundError:
-        st.error(f"⚠️ Could not find **{notebook_path}**. Please ensure it is in the same directory as this script.")
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
+elif selected == "Data Cleaning":
+    import data_cleaning
+    data_cleaning.show_cleaning()
 
-if __name__ == "__main__":
-    st.set_page_config(layout="wide")
-    show_notebook()
+elif selected == "Feature Eng.":
+    import feature_engineering
+    feature_engineering.show_feature_engineering()
+
+elif selected == "Model Eval":
+    import model_evaluation
+    model_evaluation.show_model_evaluation()
+
+elif selected == "Live Prediction":
+    import live_test
+    live_test.show_live_testing()
