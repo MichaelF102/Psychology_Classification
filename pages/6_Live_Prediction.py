@@ -124,7 +124,7 @@ def show_live_testing():
 
     # --- 2. Prediction Section ---
     
-    st.subheader("AI Prediction")
+    st.subheader("Prediction Using Catboost")
     
     model_choice = st.selectbox("Select Model:", list(models.keys()))
     model = models[model_choice]
