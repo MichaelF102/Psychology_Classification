@@ -1,7 +1,11 @@
+streamlit
 pandas
 numpy
-matplotlib
-seaborn
-scikit-learn
 plotly
-streamlit
+seaborn
+matplotlib
+scikit-learn
+joblib
+catboost
+xgboost
+lightgbm
