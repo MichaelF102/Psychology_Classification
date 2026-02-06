@@ -192,7 +192,7 @@ def show_feature_engineering():
     ax.set_title("Correlation of Engineered Features with Target")
     st.pyplot(fig)
     
-    st.info("💡 **Insight:** Look at 'Social_Activity_Level' and 'Social_Balance'. If they are high positive, they are strong predictors for Extroverts.")
+    st.info(" **Insight:** Look at 'Social_Activity_Level' and 'Social_Balance'. If they are high positive, they are strong predictors for Extroverts.")
 
 if __name__ == "__main__":
     st.set_page_config(page_title="Feature Engineering", layout="wide")
