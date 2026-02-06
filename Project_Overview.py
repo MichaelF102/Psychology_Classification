@@ -3,17 +3,18 @@ import streamlit as st
 def show_overview():
     st.title("🧠 Project Overview: Introverts vs Extroverts")
 
-    st.markdown("Team Members")
+    st.markdown("# Team Members")
     st.markdown(""" 
     
-    ### 1. Michael Fernandes
+    #### 1. Michael Fernandes
                 
-    ### 2. Manav William 
+    #### 2. Manav William 
                 
-    ### 3. Nathan Dsouza
+    #### 3. Nathan Dsouza
     
-    ### 4. Anshul Shashidhar""")
-    
+    #### 4. Anshul Shashidhar""")
+
+    st.divider()
     # --- Problem Statement ---
     st.header("1. Problem Statement")
     st.markdown("""
