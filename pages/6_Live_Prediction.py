@@ -12,7 +12,7 @@ with warnings.catch_warnings():
 
 
 def show_live_testing():
-    st.title("🧪 Advanced Personality Predictor")
+    st.title("🧪 Personality Predictor Using Catboost")
     st.markdown("Enter your data to see your **Personality Fingerprint** evolve in real-time.")
 
     # --- 1. Load Resources ---
@@ -94,79 +94,78 @@ def show_live_testing():
     
     
     # UPDATED: Side-by-Side Layout
-    col_radar, col_pred = st.columns([1, 1])
-
+   
     # --- 1. Radar Chart (Personality Fingerprint) ---
-    with col_radar:
-        st.subheader("Your Profile Shape")
-        
-        categories = ['Social Events', 'Going Outside', 'Friends', 'Time Alone']
-        user_vals = [social_events, going_outside, friends_circle, time_alone]
-        
-        fig_radar = go.Figure()
+    
+    st.subheader("Your Profile Shape")
+    
+    categories = ['Social Events', 'Going Outside', 'Friends', 'Time Alone']
+    user_vals = [social_events, going_outside, friends_circle, time_alone]
+    
+    fig_radar = go.Figure()
 
-        if means is not None:
-            fig_radar.add_trace(go.Scatterpolar(
-                r=means.loc['Introvert'].values, theta=categories,
-                fill='toself', name='Avg Introvert', line_color='blue', opacity=0.3
-            ))
-            fig_radar.add_trace(go.Scatterpolar(
-                r=means.loc['Extrovert'].values, theta=categories,
-                fill='toself', name='Avg Extrovert', line_color='orange', opacity=0.3
-            ))
-        
+    if means is not None:
         fig_radar.add_trace(go.Scatterpolar(
-            r=user_vals, theta=categories,
-            fill='toself', name='YOU', line_color='red', opacity=0.8, line=dict(width=3)
+            r=means.loc['Introvert'].values, theta=categories,
+            fill='toself', name='Avg Introvert', line_color='blue', opacity=0.3
         ))
+        fig_radar.add_trace(go.Scatterpolar(
+            r=means.loc['Extrovert'].values, theta=categories,
+            fill='toself', name='Avg Extrovert', line_color='orange', opacity=0.3
+        ))
+    
+    fig_radar.add_trace(go.Scatterpolar(
+        r=user_vals, theta=categories,
+        fill='toself', name='YOU', line_color='red', opacity=0.8, line=dict(width=3)
+    ))
 
-        fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True)), showlegend=True, height=350, margin=dict(t=30, b=30))
-        st.plotly_chart(fig_radar, use_container_width=True)
+    fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True)), showlegend=True, height=350, margin=dict(t=30, b=30))
+    st.plotly_chart(fig_radar, use_container_width=True)
 
     # --- 2. Prediction Section ---
-    with col_pred:
-        st.subheader("AI Prediction")
+    
+    st.subheader("AI Prediction")
+    
+    model_choice = st.selectbox("Select Model:", list(models.keys()))
+    model = models[model_choice]
+
+    if st.button("🔮 Analyze Me", type="primary", use_container_width=True):
         
-        model_choice = st.selectbox("Select Model:", list(models.keys()))
-        model = models[model_choice]
+        
+        label = "EXTROVERT" if social_balance >= 2.5 else "INTROVERT"
 
-        if st.button("🔮 Analyze Me", type="primary", use_container_width=True):
-            
-            
-            label = "EXTROVERT" if social_balance >= 2.5 else "INTROVERT"
+        # Probability
+        probs = model.predict_proba(input_data)[0]
+        confidence = max(probs)
+        
+        # Display Big Result
+        color = "#EF553B" if label == "EXTROVERT" else "#636EFA"
+        st.markdown(f"<h1 style='text-align: center; color: {color};'>{label}</h1>", unsafe_allow_html=True)
+        
 
-            # Probability
-            probs = model.predict_proba(input_data)[0]
-            confidence = max(probs)
-            
-            # Display Big Result
-            color = "#EF553B" if label == "EXTROVERT" else "#636EFA"
-            st.markdown(f"<h1 style='text-align: center; color: {color};'>{label}</h1>", unsafe_allow_html=True)
-            
+        #pred = model.predict(input_data)[0]
+        #label1 = "EXTROVERT" if pred ==1 else "INTROVERT"
 
-            #pred = model.predict(input_data)[0]
-            #label1 = "EXTROVERT" if pred ==1 else "INTROVERT"
+        # Gauge Chart for Confidence
+        fig_gauge = go.Figure(go.Indicator(
+            mode = "gauge+number",
+            value = confidence * 100,
+            title = {'text': "Confidence %"},
+            gauge = {'axis': {'range': [50, 100]}, 'bar': {'color': color}}
+        ))
+        fig_gauge.update_layout(height=250, margin=dict(t=30, b=30))
+        st.plotly_chart(fig_gauge, use_container_width=True)
 
-            # Gauge Chart for Confidence
-            fig_gauge = go.Figure(go.Indicator(
-                mode = "gauge+number",
-                value = confidence * 100,
-                title = {'text': "Confidence %"},
-                gauge = {'axis': {'range': [50, 100]}, 'bar': {'color': color}}
-            ))
-            fig_gauge.update_layout(height=250, margin=dict(t=30, b=30))
-            st.plotly_chart(fig_gauge, use_container_width=True)
-
-            # --- 3. The "WHY" (Context) ---
-            st.divider()
-            st.write(f"**Social Balance Score:** `{social_balance:.2f}`")
-            
-            if social_balance > 2.5:
-                st.info("💡 High activity vs. low alone time suggests **Extroversion**.")
-            elif social_balance < 1.0:
-                st.info("💡 High alone time vs. low activity suggests **Introversion**.")
-            else:
-                st.warning("💡 You are in the **Ambivert** range.")
+        # --- 3. The "WHY" (Context) ---
+        st.divider()
+        st.write(f"**Social Balance Score:** `{social_balance:.2f}`")
+        
+        if social_balance > 2.5:
+            st.info(" High activity vs. low alone time suggests **Extroversion**.")
+        elif social_balance < 1.0:
+            st.info(" High alone time vs. low activity suggests **Introversion**.")
+        else:
+            st.warning(" You are in the **Ambivert** range.")
 
    
 
@@ -188,7 +187,6 @@ def show_live_testing():
     - Social Balance Score: {social_balance:.2f}
     - Social Activity Level: {social_act_level}
     
-    Generated by Advanced Personality Predictor AI
     """
     
     st.sidebar.divider()
