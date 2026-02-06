@@ -3,12 +3,12 @@ import streamlit as st
 def show_overview():
     st.title("🧠 Project Overview: Introverts vs Extroverts")
 
-
-    st.markdown(""" 
+    st.markdown("Team Members")
+    st.code(""" 
     
     ### 1. Michael Fernandes
                 
-    ### 2. Manav Williams 
+    ### 2. Manav William 
                 
     ### 3. Nathan Dsouza
     
