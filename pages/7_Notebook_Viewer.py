@@ -1,53 +1,65 @@
 import streamlit as st
-from streamlit_option_menu import option_menu # pip install streamlit-option-menu
+import json
+import base64
 
-# Import your page functions
-# Ensure these files are in the same folder and have the specific functions defined
-# You might need to rename your previous files slightly to match this import structure
-# or just copy-paste the functions into one big file.
+def show_notebook():
+    st.title("📓 Project Notebook Viewer")
+    st.markdown("This page renders the original analysis notebook directly within the app.")
 
-# Example structure if you kept them as separate files:
-# from eda_page import show_eda
-# from data_cleaning import show_cleaning
-# from feature_engineering import show_feature_engineering
-# from model_evaluation import show_model_evaluation
-# from live_test import show_live_testing
-# from notebook_viewer import show_notebook
+    # --- 1. Load the Notebook ---
+    try:
+        with open("Introverts_vs_Extroverts.ipynb", "r", encoding="utf-8") as f:
+            notebook = json.load(f)
+    except FileNotFoundError:
+        st.error("⚠️ The file 'Introverts_vs_Extroverts.ipynb' was not found in the directory.")
+        return
 
-st.set_page_config(page_title="Introvert vs Extrovert AI", layout="wide")
+    # --- 2. Iterate and Render Cells ---
+    for i, cell in enumerate(notebook['cells']):
+        
+        # --- Handle MARKDOWN Cells ---
+        if cell['cell_type'] == 'markdown':
+            content = "".join(cell['source'])
+            st.markdown(content)
+        
+        # --- Handle CODE Cells ---
+        elif cell['cell_type'] == 'code':
+            # Display the code itself
+            source_code = "".join(cell['source'])
+            if source_code.strip(): # Only show if not empty
+                with st.expander(f"📦 Show Code (Cell {i})", expanded=False):
+                    st.code(source_code, language='python')
+            
+            # Display Inputs/Outputs (Text or Images)
+            if 'outputs' in cell:
+                for output in cell['outputs']:
+                    
+                    # 1. Handle Text Output (print statements)
+                    if 'text' in output:
+                        st.text("".join(output['text']))
+                    
+                    # 2. Handle Stream Output (stdout)
+                    if 'name' in output and output['name'] == 'stdout':
+                         st.text("".join(output['text']))
+                         
+                    # 3. Handle Rich Data (Images/Graphs)
+                    if 'data' in output:
+                        # PNG Images (Standard Matplotlib/Seaborn)
+                        if 'image/png' in output['data']:
+                            image_data = output['data']['image/png']
+                            # If it's a list, join it (rare but possible)
+                            if isinstance(image_data, list):
+                                image_data = "".join(image_data)
+                            st.image(base64.b64decode(image_data))
+                        
+                        # JPEG Images
+                        elif 'image/jpeg' in output['data']:
+                            image_data = output['data']['image/jpeg']
+                            if isinstance(image_data, list):
+                                image_data = "".join(image_data)
+                            st.image(base64.b64decode(image_data))
 
-# Sidebar Navigation
-with st.sidebar:
-    selected = option_menu(
-        "Navigation",
-        ["Home / Notebook", "EDA Analysis", "Data Cleaning", "Feature Eng.", "Model Eval", "Live Prediction"],
-        icons=['book', 'bar-chart', 'brush', 'gear', 'trophy', 'person-bounding-box'],
-        menu_icon="cast",
-        default_index=0,
-    )
+    st.success("✅ End of Notebook")
 
-# Routing Logic
-if selected == "Home / Notebook":
-    # If you haven't split files yet, just paste the notebook_viewer code here
-    import notebook_viewer
-    notebook_viewer.show_notebook()
-
-elif selected == "EDA Analysis":
-    import eda_page # Assuming you saved the EDA code as eda_page.py
-    eda_page.show_eda()
-
-elif selected == "Data Cleaning":
-    import data_cleaning
-    data_cleaning.show_cleaning()
-
-elif selected == "Feature Eng.":
-    import feature_engineering
-    feature_engineering.show_feature_engineering()
-
-elif selected == "Model Eval":
-    import model_evaluation
-    model_evaluation.show_model_evaluation()
-
-elif selected == "Live Prediction":
-    import live_test
-    live_test.show_live_testing()
+if __name__ == "__main__":
+    show_notebook()
