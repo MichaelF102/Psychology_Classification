@@ -4,7 +4,7 @@ def show_overview():
     st.title("🧠 Project Overview: Introverts vs Extroverts")
 
     st.markdown("Team Members")
-    st.code(""" 
+    st.markdown(""" 
     
     ### 1. Michael Fernandes
                 
