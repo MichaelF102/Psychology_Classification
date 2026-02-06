@@ -1,65 +1,49 @@
 import streamlit as st
-import json
-import base64
+import nbformat
+from nbconvert import HTMLExporter
+import streamlit.components.v1 as components
+import os
 
-def show_notebook():
-    st.title("📓 Project Notebook Viewer")
-    st.markdown("This page renders the original analysis notebook directly within the app.")
+st.set_page_config(
+    page_title="Notebook Report",
+    page_icon="📓",
+    layout="wide"
+)
 
-    # --- 1. Load the Notebook ---
-    try:
-        with open("Introverts_vs_Extroverts.ipynb", "r", encoding="utf-8") as f:
-            notebook = json.load(f)
-    except FileNotFoundError:
-        st.error("⚠️ The file 'Introverts_vs_Extroverts.ipynb' was not found in the directory.")
-        return
+st.title("📓 Psychology Classification – Full Notebook")
+st.subheader("Rendered Jupyter Notebook (Read-Only)")
 
-    # --- 2. Iterate and Render Cells ---
-    for i, cell in enumerate(notebook['cells']):
-        
-        # --- Handle MARKDOWN Cells ---
-        if cell['cell_type'] == 'markdown':
-            content = "".join(cell['source'])
-            st.markdown(content)
-        
-        # --- Handle CODE Cells ---
-        elif cell['cell_type'] == 'code':
-            # Display the code itself
-            source_code = "".join(cell['source'])
-            if source_code.strip(): # Only show if not empty
-                with st.expander(f"📦 Show Code (Cell {i})", expanded=False):
-                    st.code(source_code, language='python')
-            
-            # Display Inputs/Outputs (Text or Images)
-            if 'outputs' in cell:
-                for output in cell['outputs']:
-                    
-                    # 1. Handle Text Output (print statements)
-                    if 'text' in output:
-                        st.text("".join(output['text']))
-                    
-                    # 2. Handle Stream Output (stdout)
-                    if 'name' in output and output['name'] == 'stdout':
-                         st.text("".join(output['text']))
-                         
-                    # 3. Handle Rich Data (Images/Graphs)
-                    if 'data' in output:
-                        # PNG Images (Standard Matplotlib/Seaborn)
-                        if 'image/png' in output['data']:
-                            image_data = output['data']['image/png']
-                            # If it's a list, join it (rare but possible)
-                            if isinstance(image_data, list):
-                                image_data = "".join(image_data)
-                            st.image(base64.b64decode(image_data))
-                        
-                        # JPEG Images
-                        elif 'image/jpeg' in output['data']:
-                            image_data = output['data']['image/jpeg']
-                            if isinstance(image_data, list):
-                                image_data = "".join(image_data)
-                            st.image(base64.b64decode(image_data))
+st.markdown(
+    """
+    This page displays the **complete Jupyter notebook** used to build,
+    evaluate, and explain the fraud detection model.
+    
+    > 📌 This is a **read-only report view** for transparency and review.
+    """
+)
 
-    st.success("✅ End of Notebook")
+st.markdown("---")
 
-if __name__ == "__main__":
-    show_notebook()
+NOTEBOOK_PATH = "Introverts_vs_Extroverts.ipynb"
+
+if not os.path.exists(NOTEBOOK_PATH):
+    st.error("Notebook file not found.")
+    st.stop()
+
+# Load notebook
+with open(NOTEBOOK_PATH, "r", encoding="utf-8") as f:
+    notebook = nbformat.read(f, as_version=4)
+
+# Convert notebook to HTML
+html_exporter = HTMLExporter()
+html_exporter.exclude_input_prompt = True
+html_exporter.exclude_output_prompt = True
+
+(body, _) = html_exporter.from_notebook_node(notebook)
+
+# Display notebook
+components.html(
+    body,
+    height=1000,
+    scrolling=True
+)
