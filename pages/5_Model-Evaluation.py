@@ -28,8 +28,7 @@ def show_model_evaluation():
         ["Accuracy", "Precision", "Recall", "F1-Score", "All"],
         index=4 # Default to 'All'
     )
-    
-    st.sidebar.info("Tip: Select 'All' to see the big picture, or specific metrics to zoom in.")
+
 
     # ==========================================
     #           MAIN PAGE DASHBOARD
@@ -152,7 +151,7 @@ def show_catboost_importance():
     """)
     
     st.write(f"""
-    **2. Social_Discomfort_Index (15.0%)** *Equation: Stage Fear + Drained Status* CatBoost loves categorical data. This feature combines the two strongest negative feelings (Fear + Fatigue), making it a massive "Red Flag" indicator for Introversion.
+    **2. Social_Discomfort_Index (15.0%)** *Equation: Stage Fear + Drained Status* This feature combines the two strongest negative feelings (Fear + Fatigue), making it a massive "Red Flag" indicator for Introversion.
     """)
 
     st.write(f"""
@@ -160,7 +159,7 @@ def show_catboost_importance():
     """)
     
     st.write("""
-    **4 & 5. Raw Behaviors** *Going Outside & Friends Circle* These are the classic raw metrics. The fact that they are lower than the engineered features proves that **your Feature Engineering added significant value** to the model.
+    **4 & 5.  *Going Outside & Friends Circle* These are the 4th and 5th Top Features which Impact Catboost Model
     """)
 
 if __name__ == "__main__":
