@@ -4,6 +4,8 @@ import joblib
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
+from warnings import warnings
+warnings.filterwarnings('ignore')
 
 def show_live_testing():
     st.title("🧪 Advanced Personality Predictor")
