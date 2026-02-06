@@ -4,13 +4,15 @@ def show_overview():
     st.title("🧠 Project Overview: Introverts vs Extroverts")
 
 
-    st.markdown(""" 1. Michael Fernandes
-                
-    2. Manav Williams 
-                
-    3. Nathan Dsouza
+    st.markdown(""" 
     
-    4. Anshul Shashidhar""")
+    ###1. Michael Fernandes
+                
+    ###2. Manav Williams 
+                
+    ###3. Nathan Dsouza
+    
+    ###4. Anshul Shashidhar""")
     
     # --- Problem Statement ---
     st.header("1. Problem Statement")
