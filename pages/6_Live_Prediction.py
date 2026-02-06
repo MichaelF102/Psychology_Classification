@@ -4,8 +4,12 @@ import joblib
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
-from warnings import warnings
-warnings.filterwarnings('ignore')
+import warnings
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore")
+    # Code that might generate warnings goes here
+# Warnings are re-enabled outside this block
+
 
 def show_live_testing():
     st.title("🧪 Advanced Personality Predictor")
