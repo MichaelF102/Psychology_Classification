@@ -70,7 +70,7 @@ def show_cleaning():
     
     # BEFORE Chart
     with col1:
-        st.subheader("⚠️ Before Cleaning")
+        st.subheader(" Before Cleaning")
         missing_raw = df_raw.isnull().sum().reset_index()
         missing_raw.columns = ['Feature', 'Missing Count']
         missing_raw = missing_raw[missing_raw['Missing Count'] > 0]
@@ -86,7 +86,7 @@ def show_cleaning():
 
     # AFTER Chart
     with col2:
-        st.subheader("✅ After Cleaning")
+        st.subheader(" After Cleaning")
         missing_clean = df_clean.isnull().sum().reset_index()
         missing_clean.columns = ['Feature', 'Missing Count']
         
