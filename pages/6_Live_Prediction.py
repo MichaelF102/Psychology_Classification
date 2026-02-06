@@ -145,7 +145,7 @@ def show_live_testing():
 
         #pred = model.predict(input_data)[0]
         #label1 = "EXTROVERT" if pred ==1 else "INTROVERT"
-        st.maekdown(" ")
+       
         # Gauge Chart for Confidence
         fig_gauge = go.Figure(go.Indicator(
             mode = "gauge+number",
