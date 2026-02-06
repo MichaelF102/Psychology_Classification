@@ -1,7 +1,7 @@
 import streamlit as st
 
 def show_overview():
-    st.title("🧠 Project Overview: Introverts vs Extroverts")
+    st.title("🧠 ML Project : Introverts vs Extroverts")
 
     st.markdown("# Team Members")
     st.markdown(""" 
@@ -24,7 +24,7 @@ def show_overview():
     we identify key differentiators between these two personality archetypes.
     """)
     
-    st.info("🎯 **Goal:** Analyze behavioral data to distinguish between Introverts and Extroverts.")
+    st.info(" **Goal:** To Analyze behavioral data to distinguish between Introverts and Extroverts.")
 
     # --- Dataset Description ---
     st.header("2. Dataset Description")
@@ -71,6 +71,9 @@ def show_overview():
     2.  **Data Cleaning**: Handling missing values (Imputing numerical data with Median, categorical with Mode).
     3.  **Exploratory Data Analysis (EDA)**: Visualizing distributions and correlations.
     4.  **Feature Engineering**: Preparing data for modeling.
+    5.  **Model Evaluation**: Comparing The Performance Of ML Models.
+    6.  **Live Prediction**: Classifying The Person As Introvert and Extrovert Based On Input Features.
+    7.  **Notebook**: Displaying The ipynb Notebook
     """)
 
 # To run this page individually for testing
