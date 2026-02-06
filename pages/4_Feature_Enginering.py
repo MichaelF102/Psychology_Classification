@@ -4,7 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 def show_feature_engineering():
-    st.title("⚙️ Feature Engineering & Definitions")
+    st.title("⚙️ Feature Engineering ")
     st.markdown("Transforming raw data into meaningful metrics using domain-specific formulas.")
 
     # --- 1. Load Data ---
